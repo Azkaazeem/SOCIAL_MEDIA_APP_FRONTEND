@@ -5,6 +5,7 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import "./profile.css"
 
 const Profile = () => {
+      const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   return (
     <>
       <Topbar />
@@ -13,8 +14,8 @@ const Profile = () => {
         <div className="profileRight">
           <div className="profileRightTop">
             <div className="profileCover">
-              <img src="assets/post/6.jpeg" alt="" className="profileCoverImg" />
-              <img src="assets/person/9.jpeg" alt="" className="profileUserImg" />
+              <img src={`${PF}post/3.jpeg`} alt="" className="profileCoverImg" />
+              <img src={`${PF}person/1.jpg`} alt="" className="profileUserImg" />
             </div>
             <div className="profileInfo">
               <h4 className="profileInfoName">Safak Kocaoglu</h4>

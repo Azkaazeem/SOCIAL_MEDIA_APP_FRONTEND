@@ -9,6 +9,8 @@ const Post = ({post}) => {
   const [ like , setLike ] = useState(post.like);
   const [ isLiked , setIsLiked ] = useState(false);
 
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+
   const likeHandler = () => {
     setLike(isLiked ? like - 1 : like + 1)
     setIsLiked(!isLiked)
@@ -29,13 +31,13 @@ const Post = ({post}) => {
 
         <div className="postCenter">
           <div className="postText">{post?.desc}</div>
-          <img src= {post.photo} alt="" className="postImg" />
+          <img src= {PF+post.photo} alt="" className="postImg" />
         </div>
 
         <div className="postBottom">
           <div className="postBottomLeft">
-            <img src="assets/like.png" onClick={likeHandler} alt="" className="likeIcon" />
-            <img src="assets/heart.png" onClick={likeHandler} alt="" className="likeIcon" />
+            <img src={`${PF}like.png`} onClick={likeHandler} alt="" className="likeIcon" />
+            <img src={`${PF}heart.png`} onClick={likeHandler} alt="" className="likeIcon" />
             <span className='postLikeCounter'>{like} people like it</span>
           </div>
 
