@@ -8,6 +8,7 @@ export default defineConfig({
     proxy: {
       '/posts': 'http://localhost:8800/api',
       '/users': 'http://localhost:8800/api',
+      '/auth': 'http://localhost:8800/api',
     },
   },
 })
