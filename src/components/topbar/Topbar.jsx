@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 const Topbar = () => {
 
   const {user} = useContext(AuthContext);
-  const PF = process.env.VITE_PUBLIC_FOLDER;
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
