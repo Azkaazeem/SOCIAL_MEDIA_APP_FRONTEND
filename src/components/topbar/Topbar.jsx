@@ -8,6 +8,9 @@ const Topbar = () => {
 
   const {user} = useContext(AuthContext);
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const profileImage = user?.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
+  const profileLink = user?.username ? `/profile/${user.username}` : "/login";
+
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -41,7 +44,9 @@ const Topbar = () => {
           </div>
         </div>
 
-        <img src={user.profilePicture ? PF+user.profilePicture : PF+"person/noAvatar.png"} alt="" className="topbarImg" />
+      <Link to={profileLink} >
+        <img src={profileImage} alt="" className="topbarImg" />
+      </Link>
       </div>
     </div>
   )

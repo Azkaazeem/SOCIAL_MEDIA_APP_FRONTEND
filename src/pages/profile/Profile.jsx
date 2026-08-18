@@ -20,6 +20,10 @@ const Profile = () => {
     };
     fetchUser();
   }, [username])
+
+  const coverImage = user?.coverPicture ? PF + user.coverPicture : PF + "person/noBanner.jpg";
+  const profileImage = user?.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
+
   return (
     <>
       <Topbar />
@@ -28,8 +32,8 @@ const Profile = () => {
         <div className="profileRight">
           <div className="profileRightTop">
             <div className="profileCover">
-              <img src={user.coverPicture || PF + "person/noBanner.jpg"} alt="" className="profileCoverImg" />
-              <img src={user.profilePicture || PF + "person/noAvatar.jpg"} alt="" className="profileUserImg" />
+              <img src={coverImage} alt="" className="profileCoverImg" />
+              <img src={profileImage} alt="" className="profileUserImg" />
             </div>
             <div className="profileInfo">
               <h4 className="profileInfoName">{user.username}</h4>
