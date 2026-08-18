@@ -42,11 +42,39 @@
 }
 
 .loginInput {
+    width: 100%;
+    box-sizing: border-box;
     height: 50px;
     border-radius: 10px;
     border: 1px solid gray;
     font-size: 18px;
     padding-left: 20px;
+}
+
+.passwordInputWrapper {
+    position: relative;
+}
+
+.passwordInputWrapper .loginInput {
+    padding-right: 52px;
+}
+
+.passwordToggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    padding: 4px;
+    color: #606770;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.passwordToggle:hover {
+    color: #1775ee;
 }
 
 .loginButton {

@@ -1,8 +1,13 @@
 import "./Topbar.css";
 import { Search, Person, Chat, Notifications } from "@mui/icons-material";
-import { Link } from "react-router-dom"
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const Topbar = () => {
+
+  const {user} = useContext(AuthContext);
+  const PF = process.env.VITE_PUBLIC_FOLDER;
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -36,7 +41,7 @@ const Topbar = () => {
           </div>
         </div>
 
-        <img src="/assets/person/1.jpg" alt="" className="topbarImg" />
+        <img src={user.profilePicture ? PF+user.profilePicture : PF+"person/noAvatar.png"} alt="" className="topbarImg" />
       </div>
     </div>
   )
