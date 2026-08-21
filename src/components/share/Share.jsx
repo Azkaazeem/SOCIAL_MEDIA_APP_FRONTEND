@@ -1,13 +1,19 @@
+import { useContext } from "react";
 import "./share.css";
 import { PermMedia, Label, Room, EmojiEmotions } from "@mui/icons-material"
+import { AuthContext } from "../../context/AuthContext"
 
 const Share = () => {
+
+    const {user} = useContext(AuthContext)
+    const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+
   return (
     <div className="share">
         <div className="shareWrapper">
             <div className="shareTop">
-                <img className="shareProfileImg" src="/assets/person/1.jpg" alt=""/>
-                <input type="text" placeholder="What`s in your mind Safak?" className="shareInput"/>
+                <img className="shareProfileImg" src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg"} alt=""/>
+                <input type="text" placeholder={"What's in your mind" + user.username + "?"} className="shareInput"/>
             </div>
             <hr className="shareHr"/>
             <div className="shareBottom">
