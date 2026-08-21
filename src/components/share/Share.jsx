@@ -7,7 +7,8 @@ const Share = () => {
 
     const {user} = useContext(AuthContext)
     const PF = import.meta.env.VITE_PUBLIC_FOLDER;
-
+    console.log(user);
+    
   return (
     <div className="share">
         <div className="shareWrapper">
