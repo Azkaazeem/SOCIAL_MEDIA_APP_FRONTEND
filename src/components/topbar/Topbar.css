@@ -186,10 +186,11 @@
     }
 
     .mobileCenter {
-        flex: 1;
+        flex: 4;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 0 10px;
     }
 
     .mobileAvatarImg {
@@ -201,11 +202,12 @@
     }
 
     .mobileRight {
-        flex: 1;
+        flex: 1.5;
         display: flex;
         justify-content: flex-end;
         align-items: center;
         color: #4b5563;
+        gap: 12px;
     }
     
     .mobileMessageIcon {
@@ -239,9 +241,6 @@
         border-bottom: 1px solid #f3f4f6;
     }
 
-    .mobileMenuSearch {
-        padding: 16px 20px;
-    }
 
     /* Inside the overlay, force sidebar to show */
     .mobileMenuSidebarWrapper .sidebar {

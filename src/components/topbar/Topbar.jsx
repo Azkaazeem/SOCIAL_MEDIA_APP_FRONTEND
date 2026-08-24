@@ -100,12 +100,22 @@ const Topbar = () => {
           {isMobileMenuOpen ? <Close className="mobileHamburgerIcon" /> : <Menu className="mobileHamburgerIcon" />}
         </div>
         <div className="mobileCenter">
-          <Link to={profileLink} >
-            <img src={profileImage} alt="" className="mobileAvatarImg" />
-          </Link>
+          <form className="searchBar" onSubmit={handleSearch} style={{margin: "0", height: "35px", width: "100%"}}>
+            <Search className="searchIcon" style={{fontSize: "18px", marginLeft: "5px"}}/>
+            <input 
+              placeholder="Search..." 
+              className="searchInput" 
+              value={searchQuery}
+              onChange={handleSearchChange}
+              style={{fontSize: "12px", width: "100%"}}
+            />
+          </form>
         </div>
         <div className="mobileRight">
           <Chat className="mobileMessageIcon" />
+          <Link to={profileLink} style={{display: "flex"}}>
+            <img src={profileImage} alt="" className="mobileAvatarImg" />
+          </Link>
         </div>
       </div>
 
@@ -115,17 +125,7 @@ const Topbar = () => {
           <div className="mobileMenuHeader">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} style={{textDecoration:"none"}}><span className="logo">ZakoraSocial</span></Link>
           </div>
-          <div className="mobileMenuSearch">
-            <form className="searchBar" onSubmit={handleSearch}>
-              <Search className="searchIcon"/>
-              <input 
-                placeholder="Search..." 
-                className="searchInput" 
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-            </form>
-          </div>
+
           <div style={{padding: "0 20px", marginTop: "10px", display: "flex", gap: "15px"}}>
              <button style={{padding: "8px 16px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", width: "100%"}} onClick={handleLogout}>Logout</button>
           </div>
