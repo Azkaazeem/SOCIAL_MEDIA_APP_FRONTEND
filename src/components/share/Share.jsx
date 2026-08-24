@@ -62,11 +62,13 @@ const Share = () => {
         }
     }
 
+    const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+
     return (
         <div className="share">
             <div className="shareWrapper">
                 <div className="shareTop">
-                    <img className="shareProfileImg" src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg"} alt="profile" />
+                    <img className="shareProfileImg" src={user.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} alt="profile" />
                     {isArticle ? (
                         <textarea 
                             placeholder={"Write your article, " + user.username + "..."} 

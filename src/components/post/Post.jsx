@@ -68,7 +68,7 @@ const Post = ({ post }) => {
         <div className="postTop">
           <div className="postTopLeft">
             <Link to={`/profile/${user.username}`}>
-            <img src={user.profilePicture ? resolvePath(user.profilePicture) : PF+"person/noAvatar.jpg"} alt="" className="postProfileImg" />
+            <img src={user.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} alt="" className="postProfileImg" />
             </Link>
             <div className="postUsername">{user.username}</div>
             <div className="postDate">{format(post.createdAt)}</div>

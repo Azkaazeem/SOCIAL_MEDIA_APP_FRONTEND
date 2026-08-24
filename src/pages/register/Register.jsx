@@ -86,7 +86,7 @@ const Register = () => {
                     <div className="registerProfilePicContainer">
                         <label htmlFor="profilePicture" className="registerProfilePicLabel">
                             <img 
-                                src={file ? URL.createObjectURL(file) : PF + "person/noAvatar.jpg"} 
+                                src={file ? URL.createObjectURL(file) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} 
                                 alt="Profile Preview" 
                                 className="registerProfilePic" 
                             />

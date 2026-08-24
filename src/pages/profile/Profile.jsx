@@ -49,8 +49,8 @@ const Profile = () => {
 
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
   const isOwnProfile = username === currentUser.username;
-  const coverImage = user.coverPicture ? resolvePath(user.coverPicture) : PF + "person/noBanner.jpg";
-  const profileImage = user.profilePicture ? resolvePath(user.profilePicture) : PF + "person/noAvatar.jpg";
+  const coverImage = user.coverPicture ? resolvePath(user.coverPicture) : "https://i.pinimg.com/1200x/d6/94/05/d694055779c0a17614c27f1acc017738.jpg";
+  const profileImage = user.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg";
 
   return (
     <>

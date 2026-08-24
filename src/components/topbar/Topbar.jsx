@@ -15,7 +15,7 @@ const Topbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
-  const profileImage = user?.profilePicture ? resolvePath(user.profilePicture) : PF + "person/noAvatar.jpg";
+  const profileImage = user?.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg";
   const profileLink = user?.username ? `/profile/${user.username}` : "/login";
 
   const handleSearchChange = (e) => {

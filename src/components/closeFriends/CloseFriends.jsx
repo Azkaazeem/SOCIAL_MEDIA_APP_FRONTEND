@@ -5,7 +5,7 @@ const Closefriends = ({ user }) => {
     const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
     return (
         <li className="sidebarFriend">
-            <img className="sidebarFriendImg" src={user.profilePicture ? resolvePath(user.profilePicture) : PF + "person/noAvatar.jpg"} alt="" />
+            <img className="sidebarFriendImg" src={user.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} alt="" />
             <span className="sidebarFriendName">{user.username}</span>
         </li>
     )

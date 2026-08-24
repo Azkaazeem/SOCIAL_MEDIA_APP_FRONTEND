@@ -9,7 +9,7 @@ export const Online = ({user}) => {
     return (
         <li className="rightbarFriend">
             <div className="rightbarProfileImgContainer">
-                <img className="rightbarProfileImg" src={user.profilePicture ? resolvePath(user.profilePicture) : PF+"person/noAvatar.jpg"} alt="" />
+                <img className="rightbarProfileImg" src={user.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} alt="" />
                 <span className="rightbarOnline"></span>
             </div>
             <span className="rightbarUsername">{user.username}</span>
