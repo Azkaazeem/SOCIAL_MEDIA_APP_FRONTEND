@@ -1,7 +1,7 @@
 import "./sidebar.css"
 import { RssFeed, Chat, PlayCircle, Group, Bookmark, Help, Work, Event, School } from "@mui/icons-material";
 import {Users} from "../../dummyData"
-import Closefriends from "../closeFriends/Closefriends";
+import Closefriends from "../closeFriends/CloseFriends";
 
 const Sidebar = () => {
   return (
