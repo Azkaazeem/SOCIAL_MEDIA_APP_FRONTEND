@@ -86,8 +86,27 @@ const Post = ({ post }) => {
         </div>
 
         <div className="postCenter">
-          <div className="postText">{post?.desc}</div>
-          {post.img && <img src={PF + post.img} alt="" className="postImg" />}
+          <div className="postText" style={{ whiteSpace: "pre-wrap" }}>{post?.desc}</div>
+          
+          {post.img && typeof post.img === "string" && (
+            <img src={PF + post.img} alt="" className="postImg" />
+          )}
+          
+          {post.img && Array.isArray(post.img) && post.img.length > 0 && (
+            <div className="postImagesContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
+              {post.img.map((imgName, i) => (
+                <img key={i} src={PF + imgName} alt="" className="postImg" style={{ margin: 0 }} />
+              ))}
+            </div>
+          )}
+
+          {post.video && Array.isArray(post.video) && post.video.length > 0 && (
+            <div className="postVideosContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
+              {post.video.map((videoName, i) => (
+                <video key={i} src={PF + videoName} controls className="postImg" style={{ margin: 0, backgroundColor: "#000" }} />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="postBottom">

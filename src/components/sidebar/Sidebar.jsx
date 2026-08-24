@@ -1,9 +1,28 @@
 import "./sidebar.css"
 import { RssFeed, Chat, PlayCircle, Group, Bookmark, Help, Work, Event, School } from "@mui/icons-material";
-import {Users} from "../../dummyData"
 import Closefriends from "../closeFriends/CloseFriends";
+import { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const Sidebar = () => {
+  const [users, setUsers] = useState([]);
+  const { user: currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get("/users/all");
+        // Filter out current user from the random persons list
+        setUsers(res.data.filter(u => u._id !== currentUser?._id));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUsers();
+  }, [currentUser]);
+
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -52,8 +71,10 @@ const Sidebar = () => {
         <hr className="sidebarHr"/>
 
         <ul className="sidebarFriendList">
-         {Users.map((u) => (
-          <Closefriends key={u.id} user={u} />
+         {users.map((u) => (
+          <Link to={"/profile/" + u.username} style={{textDecoration: "none", color: "inherit"}} key={u._id}>
+            <Closefriends user={u} />
+          </Link>
          ))}
         </ul>
 

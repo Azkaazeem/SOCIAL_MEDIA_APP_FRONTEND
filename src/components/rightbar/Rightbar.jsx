@@ -1,5 +1,4 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
 import { Online } from "../online/Online";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -22,7 +21,9 @@ const Rightbar = ({ user }) => {
   });
 
   useEffect(() => {
-    setFollowed(currentUser.followings.includes(user?._id));
+    if (user?._id) {
+        setFollowed(currentUser.followings.includes(user._id));
+    }
     setEditData({
       city: user?.city || "",
       from: user?.from || "",
@@ -32,16 +33,17 @@ const Rightbar = ({ user }) => {
 
   useEffect(() => {
     const getFriends = async () => {
-      if (!user?._id) return;
+      const targetUserId = user?._id || currentUser._id;
+      if (!targetUserId) return;
       try {
-        const friendList = await axios.get("/users/friends/" + user._id);
+        const friendList = await axios.get("/users/friends/" + targetUserId);
         setFriends(friendList.data)
       } catch (err) {
         console.log(err);
       }
     };
     getFriends();
-  }, [user]);
+  }, [user, currentUser]);
 
   const handleClick = async () => {
     try {
@@ -64,7 +66,6 @@ const Rightbar = ({ user }) => {
       await axios.put(`/users/${currentUser._id}`, updateData);
       dispatch({ type: "UPDATE_USER", payload: updateData });
       setIsEditing(false);
-      // user prop will naturally update via Profile.jsx fetching again, or we can rely on context if needed.
     } catch (err) {
       console.log(err);
     }
@@ -75,17 +76,33 @@ const Rightbar = ({ user }) => {
   }
 
   const HomeRightbar = () => {
+    const today = new Date();
+    const todayMonth = today.getMonth() + 1; // 1-12
+    const todayDate = today.getDate();
+
+    const birthdayFriends = friends.filter(f => {
+      if (!f.dob) return false;
+      const dobDate = new Date(f.dob);
+      return (dobDate.getMonth() + 1) === todayMonth && dobDate.getDate() === todayDate;
+    });
+
     return (
       <>
-        <div className="birthdayContainer">
-          <img className="birthdayImg" src="/assets/gift.png" alt="" />
-          <span className="birthdayText"><b>Pola Foster</b> and <b>3 other friends</b> have a birthday today</span>
-        </div>
+        {birthdayFriends.length > 0 && (
+          <div className="birthdayContainer">
+            <img className="birthdayImg" src="/assets/gift.png" alt="" />
+            <span className="birthdayText">
+              <b>{birthdayFriends.map(f => f.username).join(", ")}</b> {birthdayFriends.length > 1 ? "have" : "has"} a birthday today!
+            </span>
+          </div>
+        )}
         <img src="assets/ad.png" alt="" className="rightbarAd" />
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
-          {Users.map((u) => (
-            <Online key={u.id} user={u} />
+          {friends.map((u) => (
+            <Link to={"/profile/" + u.username} style={{textDecoration: "none", color: "inherit"}} key={u._id}>
+                <Online user={u} />
+            </Link>
           ))}
         </ul>
       </>

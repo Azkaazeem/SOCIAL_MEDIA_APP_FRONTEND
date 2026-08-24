@@ -8,6 +8,7 @@ import { AddAPhoto } from '@mui/icons-material';
 
 const Register = () => {
     const username = useRef();
+    const dob = useRef();
     const email = useRef();
     const password = useRef();
     const passwordAgain = useRef();
@@ -34,6 +35,7 @@ const Register = () => {
         setIsFetching(true);
         const user = {
             username: username.current.value,
+            dob: dob.current.value,
             email: email.current.value,
             password: password.current.value,
         }
@@ -106,6 +108,17 @@ const Register = () => {
                             placeholder='Enter a username' 
                             className={`loginInput ${errorMessage ? 'inputError' : ''}`} 
                             ref={username} 
+                            onChange={handleInputChange}
+                            required 
+                        />
+                    </div>
+
+                    <div className="inputGroup">
+                        <label className="inputLabel">Date of Birth</label>
+                        <input 
+                            type="date" 
+                            className={`loginInput ${errorMessage ? 'inputError' : ''}`} 
+                            ref={dob} 
                             onChange={handleInputChange}
                             required 
                         />
