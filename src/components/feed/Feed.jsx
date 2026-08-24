@@ -10,21 +10,31 @@ const Feed = ({username}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const { user } = useContext(AuthContext);
 
+  const fetchPosts = async () => {
+    try {
+      const res = username
+        ? await axios.get("/posts/profile/" + username)
+        : await axios.get("/posts/all");
+      
+      // Sort posts to show newest first
+      setPosts(res.data.sort((p1, p2) => {
+        return new Date(p2.createdAt) - new Date(p1.createdAt);
+      }));
+    } catch (err) {
+      console.error("Failed to fetch posts:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = username
-          ? await axios.get("/posts/profile/" + username)
-          : await axios.get("/posts/all");
-        setPosts(res.data);
-      } catch (err) {
-        console.error("Failed to fetch posts:", err);
-      }
-    };
     if (username || user?._id) {
       fetchPosts();
     }
-  }, [username, user?._id])
+  }, [username, user?._id]);
+
+  useEffect(() => {
+    window.addEventListener('postCreated', fetchPosts);
+    return () => window.removeEventListener('postCreated', fetchPosts);
+  }, [username, user?._id]);
 
   // Listen for search query changes from Topbar
   useEffect(() => {

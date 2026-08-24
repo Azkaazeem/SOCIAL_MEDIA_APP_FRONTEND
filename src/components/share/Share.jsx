@@ -37,9 +37,12 @@ const Share = () => {
 
         try {
             await axios.post("/posts", newPost);
-            window.location.reload()
+            // Instead of reloading, clear the form and tell the Feed to update
+            desc.current.value = "";
+            setFile(null);
+            window.dispatchEvent(new CustomEvent('postCreated'));
         } catch (err) {
-
+            console.log(err);
         }
     }
 
