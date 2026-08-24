@@ -75,15 +75,15 @@ const Topbar = () => {
             <span className="topbarLink" onClick={handleLogout}>Logout</span>
           </div>
           <div className="topbarIcons">
-            <div className="topbarIconItem">
+            <div className="topbarIconItem not-functional">
               <Person />
               <span className="topbarIconBadge">1</span>
             </div>
-            <div className="topbarIconItem">
+            <div className="topbarIconItem not-functional">
               <Chat />
               <span className="topbarIconBadge">2</span>
             </div>
-            <div className="topbarIconItem">
+            <div className="topbarIconItem not-functional">
               <Notifications />
               <span className="topbarIconBadge">1</span>
             </div>
@@ -112,7 +112,7 @@ const Topbar = () => {
           </form>
         </div>
         <div className="mobileRight">
-          <Chat className="mobileMessageIcon" />
+          <Chat className="mobileMessageIcon not-functional" />
           <Link to={profileLink} style={{display: "flex"}}>
             <img src={profileImage} alt="" className="mobileAvatarImg" />
           </Link>

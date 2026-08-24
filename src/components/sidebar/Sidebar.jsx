@@ -32,41 +32,41 @@ const Sidebar = () => {
             <RssFeed className="sidebarIcon" />
             <span className="sidebarListItemText">Feed</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <Chat className="sidebarIcon" />
             <span className="sidebarListItemText">Chats</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <PlayCircle className="sidebarIcon" />
             <span className="sidebarListItemText">Videos</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <Group className="sidebarIcon" />
             <span className="sidebarListItemText">Groups</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <Bookmark className="sidebarIcon" />
             <span className="sidebarListItemText">Bookmarks</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <Help className="sidebarIcon" />
             <span className="sidebarListItemText">Questions</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <Work className="sidebarIcon" />
             <span className="sidebarListItemText">Jobs</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <Event className="sidebarIcon" />
             <span className="sidebarListItemText">Events</span>
           </li>
-          <li className="sidebarListItem">
+          <li className="sidebarListItem not-functional">
             <School className="sidebarIcon" />
             <span className="sidebarListItemText">Courses</span>
           </li>
         </ul>
 
-        <button className="sidebarButton">Show More</button>
+        <button className="sidebarButton not-functional">Show More</button>
 
         <hr className="sidebarHr"/>
 
