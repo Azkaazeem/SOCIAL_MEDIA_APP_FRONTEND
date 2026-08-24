@@ -9,6 +9,7 @@ export default defineConfig({
       '/posts': 'http://localhost:8800/api',
       '/users': 'http://localhost:8800/api',
       '/auth': 'http://localhost:8800/api',
+      '/upload': 'http://localhost:8800/api',
     },
   },
 })

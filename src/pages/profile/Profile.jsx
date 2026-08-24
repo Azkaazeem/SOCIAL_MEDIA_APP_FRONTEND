@@ -21,8 +21,8 @@ const Profile = () => {
     fetchUser();
   }, [username])
 
-  const coverImage = user?.coverPicture ? PF + user.coverPicture : PF + "person/noBanner.jpg";
-  const profileImage = user?.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
+  const coverImage = user.coverPicture ? PF + user.coverPicture : PF + "person/noBanner.jpg";
+  const profileImage = user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
 
   return (
     <>

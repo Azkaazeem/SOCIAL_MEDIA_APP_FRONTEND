@@ -3,25 +3,17 @@ import AuthReducer from "./AuthReducer";
 
 const INITIAL_STATE = {
     user: {
-  "_id": {
-    "$oid": "6a6eebf8b19b454046a134e0"
-  },
+  "_id": "6a6eebf8b19b454046a134e0",
   "username": "Azka1",
   "email": "azka1@gmail.com",
   "password": "$2b$10$neuYLoW.FY3px2/WhbayCeO.Ologgq5C3HFowCOWVI1NG3fTStAyK",
   "profilePicture": "person/11.jpg",
   "coverPicture": "",
-  "followers": [
-    "6a6eebd4b19b454046a134df"
-  ],
+  "followers": [],
   "followings": [],
   "isAdmin": false,
-  "createdAt": {
-    "$date": "2026-08-02T07:04:24.907Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-21T04:44:30.150Z"
-  },
+  "createdAt": "2026-08-02T07:04:24.907Z",
+  "updatedAt": "2026-08-21T04:44:30.150Z",
   "__v": 0,
   "desc": "my name is Azka.. It's my 1st ID.",
   "city": "Lahore",
