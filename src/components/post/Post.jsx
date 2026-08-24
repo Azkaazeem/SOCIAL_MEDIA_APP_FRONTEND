@@ -14,6 +14,7 @@ const Post = ({ post }) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
   const { user:currentUser } = useContext(AuthContext);
 
   useEffect( () => {
@@ -67,7 +68,7 @@ const Post = ({ post }) => {
         <div className="postTop">
           <div className="postTopLeft">
             <Link to={`/profile/${user.username}`}>
-            <img src={user.profilePicture ? PF + user.profilePicture : PF+"person/noAvatar.jpg"} alt="" className="postProfileImg" />
+            <img src={user.profilePicture ? resolvePath(user.profilePicture) : PF+"person/noAvatar.jpg"} alt="" className="postProfileImg" />
             </Link>
             <div className="postUsername">{user.username}</div>
             <div className="postDate">{format(post.createdAt)}</div>
@@ -90,12 +91,12 @@ const Post = ({ post }) => {
           <div className="postText" style={{ whiteSpace: "pre-wrap" }}>{post?.desc}</div>
           
           {post.img && typeof post.img === "string" && (
-            <img src={PF + post.img} alt="" className="postImg" />
+            <img src={resolvePath(post.img)} alt="" className="postImg" />
           )}
           
           {post.img && Array.isArray(post.img) && post.img.length > 0 && (
             <div className="postImagesContainer" style={{ position: "relative", marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#f3f4f6", borderRadius: "12px", overflow: "hidden" }}>
-              <img src={PF + post.img[currentImgIndex]} alt="" className="postImg" style={{ margin: 0, maxHeight: "500px", width: "100%", objectFit: "contain" }} />
+              <img src={resolvePath(post.img[currentImgIndex])} alt="" className="postImg" style={{ margin: 0, maxHeight: "500px", width: "100%", objectFit: "contain" }} />
               
               {post.img.length > 1 && (
                 <>
@@ -116,7 +117,7 @@ const Post = ({ post }) => {
           {post.video && Array.isArray(post.video) && post.video.length > 0 && (
             <div className="postVideosContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
               {post.video.map((videoName, i) => (
-                <video key={i} src={PF + videoName} controls className="postImg" style={{ margin: 0, backgroundColor: "#000" }} />
+                <video key={i} src={resolvePath(videoName)} controls className="postImg" style={{ margin: 0, backgroundColor: "#000" }} />
               ))}
             </div>
           )}

@@ -14,7 +14,8 @@ const Topbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const profileImage = user?.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+  const profileImage = user?.profilePicture ? resolvePath(user.profilePicture) : PF + "person/noAvatar.jpg";
   const profileLink = user?.username ? `/profile/${user.username}` : "/login";
 
   const handleSearchChange = (e) => {

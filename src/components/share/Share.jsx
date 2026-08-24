@@ -36,15 +36,15 @@ const Share = () => {
                 const filename = Date.now() + "_" + f.name;
                 data.append("name", filename);
                 data.append("file", f);
-                
-                if (f.type.startsWith("image/")) {
-                    newPost.img.push(filename);
-                } else if (f.type.startsWith("video/")) {
-                    newPost.video.push(filename);
-                }
-
                 try {
-                    await axios.post("/upload", data);
+                    const res = await axios.post("/upload", data);
+                    const cloudUrl = res.data.url;
+                    
+                    if (f.type.startsWith("image/")) {
+                        newPost.img.push(cloudUrl);
+                    } else if (f.type.startsWith("video/")) {
+                        newPost.video.push(cloudUrl);
+                    }
                 } catch (err) {
                     console.log(err);
                 }

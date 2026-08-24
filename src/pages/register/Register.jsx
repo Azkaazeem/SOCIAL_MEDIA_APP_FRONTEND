@@ -45,9 +45,9 @@ const Register = () => {
             const fileName = Date.now() + file.name;
             data.append("name", fileName);
             data.append("file", file);
-            user.profilePicture = fileName;
             try {
-                await axios.post("/upload", data);
+                const res = await axios.post("/upload", data);
+                user.profilePicture = res.data.url;
             } catch (err) {
                 console.log(err);
             }

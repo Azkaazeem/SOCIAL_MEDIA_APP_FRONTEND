@@ -31,11 +31,11 @@ const Profile = () => {
       data.append("name", fileName);
       data.append("file", file);
       
-      const updateData = { userId: currentUser._id };
-      updateData[type] = fileName;
-
       try {
-        await axios.post("/upload", data);
+        const res = await axios.post("/upload", data);
+        const updateData = { userId: currentUser._id };
+        updateData[type] = res.data.url;
+        
         await axios.put(`/users/${currentUser._id}`, updateData);
         // Update local context
         dispatch({ type: "UPDATE_USER", payload: updateData });
@@ -47,9 +47,10 @@ const Profile = () => {
     }
   }
 
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
   const isOwnProfile = username === currentUser.username;
-  const coverImage = user.coverPicture ? PF + user.coverPicture : PF + "person/noBanner.jpg";
-  const profileImage = user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
+  const coverImage = user.coverPicture ? resolvePath(user.coverPicture) : PF + "person/noBanner.jpg";
+  const profileImage = user.profilePicture ? resolvePath(user.profilePicture) : PF + "person/noAvatar.jpg";
 
   return (
     <>
