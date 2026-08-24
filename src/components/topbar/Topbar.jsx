@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import Sidebar from "../sidebar/Sidebar";
+import Swal from 'sweetalert2';
 
 const Topbar = () => {
 
@@ -33,11 +34,21 @@ const Topbar = () => {
   };
 
   const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      localStorage.removeItem("user");
-      dispatch({ type: "LOGOUT" });
-      navigate("/login");
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You will be logged out of your account.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, logout!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("user");
+        dispatch({ type: "LOGOUT" });
+        navigate("/login");
+      }
+    });
   };
 
   return (

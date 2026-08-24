@@ -5,8 +5,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from '../../context/AuthContext';
-
-
+import Swal from 'sweetalert2';
 const Post = ({ post }) => {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
@@ -38,15 +37,27 @@ const Post = ({ post }) => {
     setIsLiked(!isLiked)
   }
 
-  const handleDelete = async () => {
-    if(window.confirm("Are you sure you want to delete this post?")) {
-      try {
-        await axios.delete(`/posts/${post._id}`, { data: { userId: currentUser._id } });
-        window.dispatchEvent(new CustomEvent('postCreated')); // reuse this event to trigger feed refresh
-      } catch(err) {
-        console.log(err);
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'Delete Post?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`/posts/${post._id}`, { data: { userId: currentUser._id } });
+          window.dispatchEvent(new CustomEvent('postCreated')); // reuse this event to trigger feed refresh
+          Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
+        } catch(err) {
+          console.log(err);
+          Swal.fire('Error!', 'Something went wrong.', 'error');
+        }
       }
-    }
+    });
   }
   
   return (
