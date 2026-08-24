@@ -2,6 +2,12 @@
     flex: 3.5;
 }
 
+@media screen and (max-width: 768px) {
+    .rightbar {
+        display: none;
+    }
+}
+
 .rightbarWrapper {
     padding: 20px 20px 0 0;
 }

@@ -1,4 +1,12 @@
 .homeContainer {
     display: flex;
     width: 100%;
+    background-color: #f9fafb; /* Clean modern background */
+    min-height: calc(100vh - 50px);
+}
+
+@media screen and (max-width: 768px) {
+    .homeContainer {
+        flex-direction: column;
+    }
 }

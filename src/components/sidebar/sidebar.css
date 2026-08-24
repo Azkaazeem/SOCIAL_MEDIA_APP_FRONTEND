@@ -6,6 +6,12 @@
     top: 50px;
 }
 
+@media screen and (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 5px;
 }

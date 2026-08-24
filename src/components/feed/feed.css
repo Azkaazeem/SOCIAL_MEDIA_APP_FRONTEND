@@ -5,3 +5,13 @@
 .feedWrapper {
     padding: 20px;
 }
+
+@media screen and (max-width: 768px) {
+    .feed {
+        flex: auto;
+        width: 100%;
+    }
+    .feedWrapper {
+        padding: 10px;
+    }
+}
