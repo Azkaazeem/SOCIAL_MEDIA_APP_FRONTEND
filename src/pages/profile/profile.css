@@ -34,18 +34,70 @@
     object-fit: cover;
 }
 
-.profileUserImg {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
+.editCoverBtn {
+    position: absolute;
+    bottom: 85px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #111827;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+    z-index: 10;
+}
+
+.editCoverBtn:hover {
+    background-color: #ffffff;
+}
+
+.profileUserImgContainer {
     position: absolute;
     left: 0;
     right: 0;
     margin: auto;
     top: 175px;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+}
+
+.profileUserImg {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
     border: 4px solid #ffffff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.editProfileBtn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #f3f4f6;
+    border: 3px solid #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4b5563;
+    transition: background-color 0.2s ease;
+    z-index: 11;
+}
+
+.editProfileBtn:hover {
+    background-color: #e5e7eb;
 }
 
 .profileInfo {
@@ -90,12 +142,21 @@
     .profileCoverImg {
         height: 180px;
     }
+    .profileUserImgContainer {
+        top: 120px;
+        width: 120px;
+        height: 120px;
+    }
     .profileUserImg {
         width: 120px;
         height: 120px;
-        top: 120px;
     }
     .profileInfoName {
         font-size: 22px;
+    }
+    .editCoverBtn {
+        bottom: 80px;
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }

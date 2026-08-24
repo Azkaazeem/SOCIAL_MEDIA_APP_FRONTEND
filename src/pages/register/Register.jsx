@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { AddAPhoto } from '@mui/icons-material';
 
 const Register = () => {
     const username = useRef();
@@ -16,6 +17,9 @@ const Register = () => {
     const [showPasswordAgain, setShowPasswordAgain] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [isFetching, setIsFetching] = useState(false);
+    const [file, setFile] = useState(null);
+
+    const PF = import.meta.env.VITE_PUBLIC_FOLDER;
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -32,6 +36,19 @@ const Register = () => {
             username: username.current.value,
             email: email.current.value,
             password: password.current.value,
+        }
+
+        if (file) {
+            const data = new FormData();
+            const fileName = Date.now() + file.name;
+            data.append("name", fileName);
+            data.append("file", file);
+            user.profilePicture = fileName;
+            try {
+                await axios.post("/upload", data);
+            } catch (err) {
+                console.log(err);
+            }
         }
 
         try{
@@ -63,6 +80,24 @@ const Register = () => {
                             <span>{errorMessage}</span>
                         </div>
                     )}
+
+                    <div className="registerProfilePicContainer">
+                        <label htmlFor="profilePicture" className="registerProfilePicLabel">
+                            <img 
+                                src={file ? URL.createObjectURL(file) : PF + "person/noAvatar.jpg"} 
+                                alt="Profile Preview" 
+                                className="registerProfilePic" 
+                            />
+                            <span className="registerProfilePicHint"><AddAPhoto style={{fontSize:"14px", marginRight:"4px", verticalAlign:"middle"}}/> Add Profile Photo</span>
+                            <input 
+                                style={{ display: "none" }} 
+                                type="file" 
+                                id="profilePicture" 
+                                accept=".png,.jpeg,.jpg" 
+                                onChange={(e) => setFile(e.target.files[0])} 
+                            />
+                        </label>
+                    </div>
 
                     <div className="inputGroup">
                         <label className="inputLabel">Username</label>
