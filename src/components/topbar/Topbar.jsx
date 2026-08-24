@@ -1,15 +1,34 @@
 import "./Topbar.css";
 import { Search, Person, Chat, Notifications } from "@mui/icons-material";
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const Topbar = () => {
 
   const {user} = useContext(AuthContext);
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
   const profileImage = user?.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.jpg";
   const profileLink = user?.username ? `/profile/${user.username}` : "/login";
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    // Dispatch a custom event so Feed can filter posts in real-time
+    window.dispatchEvent(new CustomEvent('searchQueryChanged', { detail: query }));
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/profile/${searchQuery}`);
+      setSearchQuery(""); // Clear after searching
+      window.dispatchEvent(new CustomEvent('searchQueryChanged', { detail: "" }));
+    }
+  };
 
   return (
     <div className="topbarContainer">
@@ -17,10 +36,15 @@ const Topbar = () => {
         <Link to="/" style={{textDecoration:"none"}}><span className="logo">ZakoraSocial</span></Link>
       </div>
       <div className="topbarCenter">
-        <div className="searchBar">
+        <form className="searchBar" onSubmit={handleSearch}>
           <Search className="searchIcon"/>
-          <input placeholder="Search for friends, posts or videos.." className="searchInput" />
-        </div>
+          <input 
+            placeholder="Search for posts or friends..." 
+            className="searchInput" 
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </form>
       </div>
       <div className="topbarRight">
         <div className="topbarLinks">

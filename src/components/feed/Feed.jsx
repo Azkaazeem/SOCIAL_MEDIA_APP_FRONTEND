@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Feed = ({username}) => {
   const [posts, setPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -24,13 +25,31 @@ const Feed = ({username}) => {
       fetchPosts();
     }
   }, [username, user?._id])
+
+  // Listen for search query changes from Topbar
+  useEffect(() => {
+    const handleSearch = (e) => setSearchQuery(e.detail.toLowerCase());
+    window.addEventListener('searchQueryChanged', handleSearch);
+    return () => window.removeEventListener('searchQueryChanged', handleSearch);
+  }, []);
+
+  const displayedPosts = posts.filter(p => 
+    searchQuery === "" || (p.desc && p.desc.toLowerCase().includes(searchQuery))
+  );
+
   return (
     <div className="feed">
       <div className="feedWrapper">
         {(!username || username ===  user.username ) && <Share />}
-        {posts.map((p) => (
-          <Post key={p._id} post={p} />
-        ))}
+        {displayedPosts.length > 0 ? (
+          displayedPosts.map((p) => (
+            <Post key={p._id} post={p} />
+          ))
+        ) : (
+          <div style={{ textAlign: "center", marginTop: "20px", color: "#6b7280" }}>
+            No posts found.
+          </div>
+        )}
       </div>
     </div>
   )
