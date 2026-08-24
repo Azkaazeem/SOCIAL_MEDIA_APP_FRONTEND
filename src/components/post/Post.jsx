@@ -11,6 +11,7 @@ const Post = ({ post }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const { user:currentUser } = useContext(AuthContext);
@@ -93,10 +94,22 @@ const Post = ({ post }) => {
           )}
           
           {post.img && Array.isArray(post.img) && post.img.length > 0 && (
-            <div className="postImagesContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
-              {post.img.map((imgName, i) => (
-                <img key={i} src={PF + imgName} alt="" className="postImg" style={{ margin: 0 }} />
-              ))}
+            <div className="postImagesContainer" style={{ position: "relative", marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#f3f4f6", borderRadius: "12px", overflow: "hidden" }}>
+              <img src={PF + post.img[currentImgIndex]} alt="" className="postImg" style={{ margin: 0, maxHeight: "500px", width: "100%", objectFit: "contain" }} />
+              
+              {post.img.length > 1 && (
+                <>
+                  <div onClick={() => setCurrentImgIndex((prev) => (prev - 1 + post.img.length) % post.img.length)} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", backgroundColor: "rgba(0,0,0,0.5)", color: "white", width: "30px", height: "30px", borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", userSelect: "none" }}>
+                    &#10094;
+                  </div>
+                  <div onClick={() => setCurrentImgIndex((prev) => (prev + 1) % post.img.length)} style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", backgroundColor: "rgba(0,0,0,0.5)", color: "white", width: "30px", height: "30px", borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", userSelect: "none" }}>
+                    &#10095;
+                  </div>
+                  <div style={{ position: "absolute", bottom: "10px", left: "50%", transform: "translateX(-50%)", backgroundColor: "rgba(0,0,0,0.5)", color: "white", padding: "4px 10px", borderRadius: "12px", fontSize: "12px" }}>
+                    {currentImgIndex + 1} / {post.img.length}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
