@@ -20,6 +20,8 @@ const Rightbar = ({ user }) => {
     relationship: 1
   });
 
+  const [connections, setConnections] = useState({ followers: [], followings: [], mutuals: [] });
+
   useEffect(() => {
     if (user?._id) {
         setFollowed(currentUser.followings.includes(user._id));
@@ -31,9 +33,24 @@ const Rightbar = ({ user }) => {
     });
   }, [currentUser, user]);
 
+  // Fetch connections for ProfileRightbar
+  useEffect(() => {
+    const getConnections = async () => {
+      if (!user?._id) return;
+      try {
+        const res = await axios.get("/users/connections/" + user._id);
+        setConnections(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getConnections();
+  }, [user]);
+
+  // Fetch friends (followings) for HomeRightbar
   useEffect(() => {
     const getFriends = async () => {
-      const targetUserId = user?._id || currentUser._id;
+      const targetUserId = currentUser._id;
       if (!targetUserId) return;
       try {
         const friendList = await axios.get("/users/friends/" + targetUserId);
@@ -43,7 +60,7 @@ const Rightbar = ({ user }) => {
       }
     };
     getFriends();
-  }, [user, currentUser]);
+  }, [currentUser]);
 
   const handleClick = async () => {
     try {
@@ -108,6 +125,29 @@ const Rightbar = ({ user }) => {
       </>
     )
   }
+
+  const renderConnectionSection = (title, list) => {
+    return (
+      <div style={{ marginBottom: "20px" }}>
+        <h4 className="rightbarTitle" style={{ marginBottom: "10px" }}>
+          {title} <span style={{ color: "gray", fontSize: "14px" }}>({list.length})</span>
+        </h4>
+        <div className="rightbarFollowings">
+          {list.map((c) => (
+            <Link style={{ textDecoration: "none", color: "black" }} key={c._id} to={"/profile/" + c.username}>
+              <div className="rightbarFollowing">
+                <img src={c.profilePicture ? resolvePath(c.profilePicture) : PF + "person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
+                <span className="rightbarFollowingName">{c.username}</span>
+              </div>
+            </Link>
+          ))}
+          {list.length === 0 && <span style={{color: "gray", fontSize: "13px"}}>No users yet.</span>}
+        </div>
+      </div>
+    );
+  };
+
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
 
   const ProfileRightbar = () => {
     const isOwnProfile = user?.username === currentUser.username;
@@ -176,17 +216,11 @@ const Rightbar = ({ user }) => {
           )}
         </div>
 
-        <h4 className="rightbarTitle">User Friends</h4>
-        <div className="rightbarFollowings">
-          {friends.map((friend, index) => (
-            <Link style={{ textDecoration: "none", color: "black" }} key={friend._id} to={"/profile/" + friend.username}>
-              <div className="rightbarFollowing" key={index}>
-                <img src={friend.profilePicture ? PF + friend.profilePicture : PF + "person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
-                <span className="rightbarFollowingName">{friend.username}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <hr style={{margin: "20px 0", border: "none", borderTop: "1px solid #eee"}} />
+
+        {renderConnectionSection("Friends", connections.mutuals)}
+        {renderConnectionSection("Followers", connections.followers)}
+        {renderConnectionSection("Followings", connections.followings)}
       </>
     )
   }
