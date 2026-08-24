@@ -32,6 +32,14 @@ const Topbar = () => {
     }
   };
 
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("user");
+      dispatch({ type: "LOGOUT" });
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="topbarContainer">
       {/* DESKTOP TOPBAR */}
@@ -53,11 +61,7 @@ const Topbar = () => {
         <div className="topbarRight">
           <div className="topbarLinks">
             <span className="topbarLink" onClick={() => navigate("/")}>Home</span>
-            <span className="topbarLink" onClick={() => {
-              localStorage.removeItem("user");
-              dispatch({ type: "LOGOUT" });
-              navigate("/login");
-            }}>Logout</span>
+            <span className="topbarLink" onClick={handleLogout}>Logout</span>
           </div>
           <div className="topbarIcons">
             <div className="topbarIconItem">
@@ -112,11 +116,7 @@ const Topbar = () => {
             </form>
           </div>
           <div style={{padding: "0 20px", marginTop: "10px", display: "flex", gap: "15px"}}>
-             <button style={{padding: "8px 16px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", width: "100%"}} onClick={() => {
-                localStorage.removeItem("user");
-                dispatch({ type: "LOGOUT" });
-                navigate("/login");
-             }}>Logout</button>
+             <button style={{padding: "8px 16px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", width: "100%"}} onClick={handleLogout}>Logout</button>
           </div>
           <div className="mobileMenuSidebarWrapper">
              <Sidebar />
