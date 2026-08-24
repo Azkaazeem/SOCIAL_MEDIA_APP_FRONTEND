@@ -1,10 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 .rightbar {
     flex: 3.5;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @media screen and (max-width: 768px) {
     .rightbar {
         display: none;
+    }
+    /* Add a specific override for profile page on mobile so it doesn't disappear completely */
+    .profileRightBottom .rightbar {
+        display: block;
+        padding: 0 16px;
     }
 }
 
@@ -15,27 +23,35 @@
 .birthdayContainer {
     display: flex;
     align-items: center;
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .birthdayImg {
     width: 40px;
     height: 40px;
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 .birthdayText {
-    font-weight: 300;
-    font-size: 15px;
+    font-weight: 400;
+    font-size: 14px;
+    color: #4b5563;
 }
 
 .rightbarAd {
     width: 100%;
-    border-radius: 10px;
+    border-radius: 12px;
     margin: 30px 0;
 }
 
 .rightbarTitle {
-    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #111827;
 }
 
 .rightbarFriendList {
@@ -62,66 +78,95 @@
     object-fit: cover;
 }
 
-.rightbarTitle {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
+/* Profile Rightbar */
 .rightbarInfo {
     margin-bottom: 30px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .rightbarInfoItem {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.rightbarInfoItem:last-child {
+    margin-bottom: 0;
 }
 
 .rightbarInfoKey {
     font-weight: 500;
     margin-right: 15px;
-    color: #555;
+    color: #4b5563;
+    width: 100px;
 }
 
 .rightbarInfoKeyValue {
-    font-weight: 300;
+    font-weight: 400;
+    color: #111827;
 }
 
 .rightbarFollowings {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 16px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .rightbarFollowing {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    align-items: center;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.rightbarFollowing:hover {
+    transform: translateY(-2px);
 }
 
 .rightbarFollowingImg {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.rightbarFollowingName {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
 }
 
 .rightbarFollowButton {
-    margin-top: 30px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     border: none;
-    background-color: #1872f2;
+    background-color: #4f46e5;
     color: white;
-    border-radius: 5px;
-    padding: 5px 10px;
+    border-radius: 8px;
+    padding: 8px 16px;
     display: flex;
     align-items: center;
-    font-size: 16px;
-    font-weight: 500;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
 }
 
-.rightbarFollowButton :focus {
+.rightbarFollowButton:hover {
+    background-color: #4338ca;
+}
+
+.rightbarFollowButton:focus {
     outline: none;
 }

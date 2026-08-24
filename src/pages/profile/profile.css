@@ -1,9 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 .profile {
     display: flex;
+    background-color: #f9fafb;
+    min-height: calc(100vh - 60px);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .profileRight {
     flex: 9;
+    display: flex;
+    flex-direction: column;
+}
+
+.profileRightTop {
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    padding-bottom: 24px;
+    margin-bottom: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow: hidden;
 }
 
 .profileCover {
@@ -26,8 +43,9 @@
     left: 0;
     right: 0;
     margin: auto;
-    top: 150px;
-    border: 3px solid white;
+    top: 175px;
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .profileInfo {
@@ -35,16 +53,49 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-top: 30px;
 }
 
 .profileInfoName {
-    font-size: 24px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
 }
 
 .profileInfoDesc {
-    font-weight: 300;
+    font-weight: 400;
+    color: #6b7280;
+    font-size: 15px;
 }
 
 .profileRightBottom {
     display: flex;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .profile {
+        flex-direction: column;
+    }
+    .profileRight {
+        width: 100%;
+    }
+    .profileRightBottom {
+        flex-direction: column;
+    }
+    .profileCover {
+        height: 250px;
+    }
+    .profileCoverImg {
+        height: 180px;
+    }
+    .profileUserImg {
+        width: 120px;
+        height: 120px;
+        top: 120px;
+    }
+    .profileInfoName {
+        font-size: 22px;
+    }
 }
