@@ -8,10 +8,10 @@ import { AuthContext } from '../../context/AuthContext';
 
 
 const Post = ({ post }) => {
-  // {console.log(post);}
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const { user:currentUser } = useContext(AuthContext);
@@ -37,6 +37,17 @@ const Post = ({ post }) => {
     setLike(isLiked ? like - 1 : like + 1)
     setIsLiked(!isLiked)
   }
+
+  const handleDelete = async () => {
+    if(window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        await axios.delete(`/posts/${post._id}`, { data: { userId: currentUser._id } });
+        window.dispatchEvent(new CustomEvent('postCreated')); // reuse this event to trigger feed refresh
+      } catch(err) {
+        console.log(err);
+      }
+    }
+  }
   
   return (
     <div className='post'>
@@ -49,8 +60,17 @@ const Post = ({ post }) => {
             <div className="postUsername">{user.username}</div>
             <div className="postDate">{format(post.createdAt)}</div>
           </div>
-          <div className="postTopRight">
-            <MoreVert />
+          <div className="postTopRight" style={{position: "relative"}}>
+            {post.userId === currentUser._id && (
+              <>
+                <MoreVert style={{cursor: "pointer"}} onClick={() => setMenuOpen(!menuOpen)} />
+                {menuOpen && (
+                  <div className="postDropdown">
+                    <span onClick={handleDelete} className="postDropdownItem">Delete</span>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
 

@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext"
-import { Add, Remove } from "@mui/icons-material"
+import { Add, Remove, Edit } from "@mui/icons-material"
 
 const Rightbar = ({ user }) => {
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
@@ -13,9 +13,22 @@ const Rightbar = ({ user }) => {
   const { user: currentUser, dispatch } = useContext(AuthContext)
   const [followed, setFollowed] = useState(false)
 
+  // Edit states
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    city: "",
+    from: "",
+    relationship: 1
+  });
+
   useEffect(() => {
     setFollowed(currentUser.followings.includes(user?._id));
-  }, [currentUser, user?._id]);
+    setEditData({
+      city: user?.city || "",
+      from: user?.from || "",
+      relationship: user?.relationship || 1
+    });
+  }, [currentUser, user]);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -45,6 +58,22 @@ const Rightbar = ({ user }) => {
     }
   }
 
+  const handleEditSave = async () => {
+    try {
+      const updateData = { userId: currentUser._id, ...editData };
+      await axios.put(`/users/${currentUser._id}`, updateData);
+      dispatch({ type: "UPDATE_USER", payload: updateData });
+      setIsEditing(false);
+      // user prop will naturally update via Profile.jsx fetching again, or we can rely on context if needed.
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const handleEditChange = (e) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  }
+
   const HomeRightbar = () => {
     return (
       <>
@@ -64,33 +93,72 @@ const Rightbar = ({ user }) => {
   }
 
   const ProfileRightbar = () => {
+    const isOwnProfile = user?.username === currentUser.username;
+
     return (
       <>
         {
-          user.username !== currentUser.username && (
+          !isOwnProfile && (
             <button className="rightbarFollowButton" onClick={handleClick}>
               {followed ? "Unfollow" : "Follow"}
               {followed ? <Remove /> : <Add />}
             </button>
           )
         }
-        <h4 className="rightbarTitle">User Information</h4>
-        <div className="rightbarInfo">
-          <div className="rightbarInfoItem">
-            <div className="rightbarInfoKey">City:</div>
-            <div className="rightbarInfoValue"> {user.city}</div>
-          </div>
-
-          <div className="rightbarInfoItem">
-            <div className="rightbarInfoKey">From:</div>
-            <div className="rightbarInfoValue"> {user.from}</div>
-          </div>
-
-          <div className="rightbarInfoItem">
-            <div className="rightbarInfoKey">Relationship:</div>
-            <div className="rightbarInfoValue"> {user.relationship === 1 ? "Single" : user.relationship === 2 ? "Married" : "-"}</div>
-          </div>
+        
+        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px"}}>
+          <h4 className="rightbarTitle" style={{marginBottom: 0}}>User Information</h4>
+          {isOwnProfile && !isEditing && (
+            <button onClick={() => setIsEditing(true)} style={{border: "none", background: "transparent", color: "#4f46e5", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", fontWeight: "600"}}>
+              <Edit style={{fontSize: "16px"}}/> Edit
+            </button>
+          )}
         </div>
+
+        <div className="rightbarInfo">
+          {isEditing ? (
+            <div style={{display: "flex", flexDirection: "column", gap: "10px", padding: "10px 0"}}>
+              <div>
+                <label style={{fontSize: "14px", color: "#6b7280", marginBottom: "5px", display: "block"}}>City</label>
+                <input type="text" name="city" value={editData.city} onChange={handleEditChange} style={{width: "100%", padding: "8px", borderRadius: "5px", border: "1px solid #d1d5db"}} />
+              </div>
+              <div>
+                <label style={{fontSize: "14px", color: "#6b7280", marginBottom: "5px", display: "block"}}>From</label>
+                <input type="text" name="from" value={editData.from} onChange={handleEditChange} style={{width: "100%", padding: "8px", borderRadius: "5px", border: "1px solid #d1d5db"}} />
+              </div>
+              <div>
+                <label style={{fontSize: "14px", color: "#6b7280", marginBottom: "5px", display: "block"}}>Relationship</label>
+                <select name="relationship" value={editData.relationship} onChange={handleEditChange} style={{width: "100%", padding: "8px", borderRadius: "5px", border: "1px solid #d1d5db"}}>
+                  <option value={1}>Single</option>
+                  <option value={2}>Married</option>
+                  <option value={3}>-</option>
+                </select>
+              </div>
+              <div style={{display: "flex", gap: "10px", marginTop: "10px"}}>
+                <button onClick={handleEditSave} style={{padding: "6px 15px", backgroundColor: "#4f46e5", color: "white", border: "none", borderRadius: "5px", cursor: "pointer"}}>Save</button>
+                <button onClick={() => setIsEditing(false)} style={{padding: "6px 15px", backgroundColor: "#e5e7eb", color: "#4b5563", border: "none", borderRadius: "5px", cursor: "pointer"}}>Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="rightbarInfoItem">
+                <div className="rightbarInfoKey">City:</div>
+                <div className="rightbarInfoValue"> {user.city}</div>
+              </div>
+
+              <div className="rightbarInfoItem">
+                <div className="rightbarInfoKey">From:</div>
+                <div className="rightbarInfoValue"> {user.from}</div>
+              </div>
+
+              <div className="rightbarInfoItem">
+                <div className="rightbarInfoKey">Relationship:</div>
+                <div className="rightbarInfoValue"> {user.relationship === 1 ? "Single" : user.relationship === 2 ? "Married" : "-"}</div>
+              </div>
+            </>
+          )}
+        </div>
+
         <h4 className="rightbarTitle">User Friends</h4>
         <div className="rightbarFollowings">
           {friends.map((friend, index) => (

@@ -7,7 +7,7 @@ import Sidebar from "../sidebar/Sidebar";
 
 const Topbar = () => {
 
-  const {user} = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,8 +52,12 @@ const Topbar = () => {
         </div>
         <div className="topbarRight">
           <div className="topbarLinks">
-            <span className="topbarLink">Home Page</span>
-            <span className="topbarLink">Timeline</span>
+            <span className="topbarLink" onClick={() => navigate("/")}>Home</span>
+            <span className="topbarLink" onClick={() => {
+              localStorage.removeItem("user");
+              dispatch({ type: "LOGOUT" });
+              navigate("/login");
+            }}>Logout</span>
           </div>
           <div className="topbarIcons">
             <div className="topbarIconItem">
@@ -106,6 +110,13 @@ const Topbar = () => {
                 onChange={handleSearchChange}
               />
             </form>
+          </div>
+          <div style={{padding: "0 20px", marginTop: "10px", display: "flex", gap: "15px"}}>
+             <button style={{padding: "8px 16px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", width: "100%"}} onClick={() => {
+                localStorage.removeItem("user");
+                dispatch({ type: "LOGOUT" });
+                navigate("/login");
+             }}>Logout</button>
           </div>
           <div className="mobileMenuSidebarWrapper">
              <Sidebar />
