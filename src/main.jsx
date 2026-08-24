@@ -5,7 +5,11 @@ import { AuthContextProvider } from "./context/AuthContext";
 import axios from "axios";
 
 // local link || deploy link
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || "https://social-media-app-backend-lezqo5sml-azka-azeems-projects.vercel.app/api";
+const API_URL = import.meta.env.PROD 
+  ? "https://social-media-app-backend-lezqo5sml-azka-azeems-projects.vercel.app/api" 
+  : "http://localhost:8800/api";
+
+axios.defaults.baseURL = API_URL;
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
