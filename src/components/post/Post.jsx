@@ -1,6 +1,6 @@
 import { useState , useEffect, useContext } from 'react';
 import './post.css'
-import { MoreVert } from '@mui/icons-material';
+import { MoreVert, Favorite, FavoriteBorder } from '@mui/icons-material';
 import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
@@ -125,8 +125,11 @@ const Post = ({ post }) => {
 
         <div className="postBottom">
           <div className="postBottomLeft">
-            <img src={`${PF}like.png`} onClick={likeHandler} alt="" className="likeIcon" />
-            <img src={`${PF}heart.png`} onClick={likeHandler} alt="" className="likeIcon" />
+            {isLiked ? (
+              <Favorite htmlColor="red" onClick={likeHandler} className="likeIcon" style={{ cursor: "pointer", fontSize: "24px", marginRight: "5px" }} />
+            ) : (
+              <FavoriteBorder htmlColor="red" onClick={likeHandler} className="likeIcon" style={{ cursor: "pointer", fontSize: "24px", marginRight: "5px" }} />
+            )}
             <span className='postLikeCounter'>{like} people like it</span>
           </div>
 
