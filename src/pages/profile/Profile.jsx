@@ -27,14 +27,14 @@ const Profile = () => {
     const file = e.target.files[0];
     if (file) {
       const data = new FormData();
-      const fileName = Date.now() + file.name;
+      const fileName = Date.now() + "_" + file.name;
       data.append("name", fileName);
       data.append("file", file);
       
       try {
         const res = await axios.post("/upload", data);
         const updateData = { userId: currentUser._id };
-        updateData[type] = res.data.url;
+        updateData[type] = res.data?.url || fileName;
         
         await axios.put(`/users/${currentUser._id}`, updateData);
         // Update local context
