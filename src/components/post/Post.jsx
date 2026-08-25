@@ -14,7 +14,7 @@ const Post = ({ post }) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
-  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : null;
   const { user:currentUser } = useContext(AuthContext);
 
   useEffect( () => {
@@ -88,7 +88,7 @@ const Post = ({ post }) => {
         </div>
 
         <div className="postCenter">
-          <div className="postText" style={{ whiteSpace: "pre-wrap" }}>{post?.desc}</div>
+          <div className="postText" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", overflowWrap: "anywhere" }}>{post?.desc}</div>
           
           {post.img && typeof post.img === "string" && (
             <img src={resolvePath(post.img)} alt="" className="postImg" />
@@ -117,7 +117,7 @@ const Post = ({ post }) => {
           {post.video && Array.isArray(post.video) && post.video.length > 0 && (
             <div className="postVideosContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
               {post.video.map((videoName, i) => (
-                <video key={i} src={resolvePath(videoName)} controls className="postImg" style={{ margin: 0, backgroundColor: "#000" }} />
+                <video key={i} src={resolvePath(videoName)} controls crossOrigin="anonymous" preload="metadata" className="postImg" style={{ margin: 0, backgroundColor: "#000" }} />
               ))}
             </div>
           )}

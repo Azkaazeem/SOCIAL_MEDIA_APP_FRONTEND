@@ -38,7 +38,7 @@ const Share = () => {
                 data.append("file", f);
                 try {
                     const res = await axios.post("/upload", data);
-                    const cloudUrl = res.data.url;
+                    const cloudUrl = res.data?.url || filename;
                     
                     if (f.type.startsWith("image/")) {
                         newPost.img.push(cloudUrl);
