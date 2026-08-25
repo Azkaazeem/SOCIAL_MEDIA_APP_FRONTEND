@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from '../../context/AuthContext';
+import { SocketContext } from '../../context/SocketContext';
 import Swal from 'sweetalert2';
 const Post = ({ post }) => {
   const [like, setLike] = useState(post.likes.length);
@@ -16,6 +17,7 @@ const Post = ({ post }) => {
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : null;
   const { user:currentUser } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
 
   useEffect( () => {
     setIsLiked(post.likes.includes(currentUser._id))
@@ -32,6 +34,17 @@ const Post = ({ post }) => {
   const likeHandler = async () => {
     try {
       await axios.put("/posts/" + post._id + "/like" , { userId: currentUser._id })
+      
+      // If we are liking the post (and it's not our own post)
+      if (!isLiked && socket && currentUser._id !== post.userId) {
+        socket.emit("sendNotification", {
+          senderName: currentUser.username,
+          senderProfilePicture: currentUser.profilePicture,
+          receiverName: user.username,
+          type: "like",
+          postId: post._id,
+        });
+      }
     } catch (err) {
 
     }

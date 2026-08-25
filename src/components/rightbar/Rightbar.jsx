@@ -4,12 +4,14 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext"
+import { SocketContext } from "../../context/SocketContext"
 import { Add, Remove, Edit } from "@mui/icons-material"
 
 const Rightbar = ({ user }) => {
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([])
   const { user: currentUser, dispatch } = useContext(AuthContext)
+  const { socket } = useContext(SocketContext)
   const [followed, setFollowed] = useState(false)
 
   // Edit states
@@ -70,12 +72,45 @@ const Rightbar = ({ user }) => {
       } else {
         await axios.put("/users/" + user._id + "/follow", {userId:currentUser._id});
         dispatch({ type: "FOLLOW", payload: user._id });
+        if (socket) {
+          socket.emit("sendNotification", {
+            senderName: currentUser.username,
+            senderProfilePicture: currentUser.profilePicture,
+            receiverName: user.username,
+            type: "follow",
+          });
+        }
       }
       setFollowed(!followed);
     } catch (err) {
       console.log(err);
     }
   }
+
+  const handleFollowBack = async (c) => {
+    try {
+      await axios.put("/users/" + c._id + "/follow", {userId: currentUser._id});
+      dispatch({ type: "FOLLOW", payload: c._id });
+      if (socket) {
+        socket.emit("sendNotification", {
+          senderName: currentUser.username,
+          senderProfilePicture: currentUser.profilePicture,
+          receiverName: c.username,
+          type: "follow",
+        });
+      }
+      // If we are looking at our own profile, update local state
+      if (user?._id === currentUser._id) {
+         setConnections(prev => ({
+           ...prev,
+           followings: [...prev.followings, c],
+           mutuals: [...prev.mutuals, c]
+         }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleEditSave = async () => {
     try {
@@ -133,14 +168,29 @@ const Rightbar = ({ user }) => {
           {title} <span style={{ color: "gray", fontSize: "14px" }}>({list.length})</span>
         </h4>
         <div className="rightbarFollowings">
-          {list.map((c) => (
-            <Link style={{ textDecoration: "none", color: "black" }} key={c._id} to={"/profile/" + c.username}>
-              <div className="rightbarFollowing">
-                <img src={c.profilePicture ? resolvePath(c.profilePicture) : PF + "person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
-                <span className="rightbarFollowingName">{c.username}</span>
-              </div>
-            </Link>
-          ))}
+          {list.map((c) => {
+            const isFollower = title === "Followers";
+            const iFollowThem = currentUser.followings.includes(c._id);
+            const showFollowBack = isFollower && !iFollowThem && c._id !== currentUser._id;
+            
+            return (
+            <div key={c._id} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <Link style={{ textDecoration: "none", color: "black" }} to={"/profile/" + c.username}>
+                <div className="rightbarFollowing">
+                  <img src={c.profilePicture ? resolvePath(c.profilePicture) : PF + "person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
+                  <span className="rightbarFollowingName">{c.username}</span>
+                </div>
+              </Link>
+              {showFollowBack && (
+                 <button 
+                   style={{ marginTop: "5px", fontSize: "12px", padding: "3px 8px", cursor: "pointer", backgroundColor: "#1877f2", color: "white", border: "none", borderRadius: "5px", fontWeight: "500" }}
+                   onClick={() => handleFollowBack(c)}
+                 >
+                   Follow Back
+                 </button>
+              )}
+            </div>
+          )})}
           {list.length === 0 && <span style={{color: "gray", fontSize: "13px"}}>No users yet.</span>}
         </div>
       </div>
@@ -151,13 +201,14 @@ const Rightbar = ({ user }) => {
 
   const ProfileRightbar = () => {
     const isOwnProfile = user?.username === currentUser.username;
+    const followsMe = currentUser.followers?.includes(user?._id);
 
     return (
       <>
         {
           !isOwnProfile && (
             <button className="rightbarFollowButton" onClick={handleClick}>
-              {followed ? "Unfollow" : "Follow"}
+              {followed ? "Unfollow" : (followsMe ? "Follow Back" : "Follow")}
               {followed ? <Remove /> : <Add />}
             </button>
           )

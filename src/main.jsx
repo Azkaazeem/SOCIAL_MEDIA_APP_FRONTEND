@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import { AuthContextProvider } from "./context/AuthContext";
+import { SocketContextProvider } from "./context/SocketContext";
 import axios from "axios";
 
 // local link || deploy link
@@ -14,7 +15,9 @@ axios.defaults.baseURL = API_URL;
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthContextProvider>
-      <App/>
+      <SocketContextProvider>
+        <App/>
+      </SocketContextProvider>
     </AuthContextProvider>
   </StrictMode>,
 )

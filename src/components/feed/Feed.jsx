@@ -4,6 +4,7 @@ import "./feed.css";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
+import { format } from "timeago.js";
 
 const Feed = ({username}) => {
   const [posts, setPosts] = useState([]);
@@ -16,10 +17,39 @@ const Feed = ({username}) => {
         ? await axios.get("/posts/profile/" + username)
         : await axios.get("/posts/all");
       
-      // Sort posts to show newest first
-      setPosts(res.data.sort((p1, p2) => {
-        return new Date(p2.createdAt) - new Date(p1.createdAt);
+      const usersRes = await axios.get("/users/all");
+      const usersMap = {};
+      usersRes.data.forEach(u => usersMap[u._id] = u.username);
+      
+      const postsWithMetadata = res.data.map(p => ({
+        ...p,
+        username: usersMap[p.userId] || "",
+        timeString: format(p.createdAt)
       }));
+
+      const now = new Date();
+      const newLocalPosts = [];
+      const otherPosts = [];
+      
+      postsWithMetadata.forEach(p => {
+        const postTime = new Date(p.createdAt);
+        // 5 minutes threshold to keep newly created posts at the top
+        if (p.userId === user?._id && (now - postTime) < 300000) {
+           newLocalPosts.push(p);
+        } else {
+           otherPosts.push(p);
+        }
+      });
+      
+      newLocalPosts.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      // Shuffle older/other posts
+      for (let i = otherPosts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherPosts[i], otherPosts[j]] = [otherPosts[j], otherPosts[i]];
+      }
+
+      setPosts([...newLocalPosts, ...otherPosts]);
     } catch (err) {
       console.error("Failed to fetch posts:", err);
     }
@@ -36,16 +66,40 @@ const Feed = ({username}) => {
     return () => window.removeEventListener('postCreated', fetchPosts);
   }, [username, user?._id]);
 
-  // Listen for search query changes from Topbar
+  const [filterType, setFilterType] = useState('all');
+
   useEffect(() => {
     const handleSearch = (e) => setSearchQuery(e.detail.toLowerCase());
     window.addEventListener('searchQueryChanged', handleSearch);
     return () => window.removeEventListener('searchQueryChanged', handleSearch);
   }, []);
 
-  const displayedPosts = posts.filter(p => 
-    searchQuery === "" || (p.desc && p.desc.toLowerCase().includes(searchQuery))
-  );
+  useEffect(() => {
+    const handleFilter = (e) => setFilterType(e.detail);
+    window.addEventListener('postFilterChanged', handleFilter);
+    return () => window.removeEventListener('postFilterChanged', handleFilter);
+  }, []);
+
+  const displayedPosts = posts.filter(p => {
+    // Media Type filter
+    if (filterType === 'video') {
+      if (!p.video || p.video.length === 0) return false;
+    } else if (filterType === 'image') {
+      if (!p.img || p.img.length === 0) return false;
+    } else if (filterType === 'article') {
+      // Must have desc, but no img and no video
+      const hasImg = p.img && p.img.length > 0;
+      const hasVideo = p.video && p.video.length > 0;
+      if (!p.desc || hasImg || hasVideo) return false;
+    }
+
+    // Search query filter
+    if (searchQuery === "") return true;
+    const matchDesc = p.desc && p.desc.toLowerCase().includes(searchQuery);
+    const matchUser = p.username && p.username.toLowerCase().includes(searchQuery);
+    const matchTime = p.timeString && p.timeString.toLowerCase().includes(searchQuery);
+    return matchDesc || matchUser || matchTime;
+  });
 
   return (
     <div className="feed">
@@ -57,7 +111,7 @@ const Feed = ({username}) => {
           ))
         ) : (
           <div style={{ textAlign: "center", marginTop: "20px", color: "#6b7280" }}>
-            No posts found.
+            No posts found matching "{searchQuery}".
           </div>
         )}
       </div>
