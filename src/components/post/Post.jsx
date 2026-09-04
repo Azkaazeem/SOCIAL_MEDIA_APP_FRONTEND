@@ -3,10 +3,11 @@ import './post.css'
 import { MoreVert, Favorite, FavoriteBorder } from '@mui/icons-material';
 import axios from "axios";
 import { format } from "timeago.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from '../../context/AuthContext';
 import { SocketContext } from '../../context/SocketContext';
 import Swal from 'sweetalert2';
+
 const Post = ({ post }) => {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
@@ -16,12 +17,13 @@ const Post = ({ post }) => {
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : null;
-  const { user:currentUser } = useContext(AuthContext);
+  const { user: currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
+  const navigate = useNavigate();
 
-  useEffect( () => {
-    setIsLiked(post.likes.includes(currentUser._id))
-  }, [currentUser._id, post.likes])
+  useEffect(() => {
+    setIsLiked(Boolean(currentUser?._id && post.likes?.includes(currentUser._id)));
+  }, [currentUser?._id, post.likes]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,11 +31,28 @@ const Post = ({ post }) => {
       setUser(res.data);
     };
     fetchUser();
-  }, [post.userId])
+  }, [post.userId]);
 
   const likeHandler = async () => {
+    if (!currentUser) {
+      Swal.fire({
+        title: "Login Required",
+        text: "Please sign in to like this post and join the conversation!",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Sign In",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#4f46e5"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+      return;
+    }
+
     try {
-      await axios.put("/posts/" + post._id + "/like" , { userId: currentUser._id })
+      await axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
       
       // If we are liking the post (and it's not our own post)
       if (!isLiked && socket && currentUser._id !== post.userId) {
@@ -46,11 +65,11 @@ const Post = ({ post }) => {
         });
       }
     } catch (err) {
-
+      console.error(err);
     }
-    setLike(isLiked ? like - 1 : like + 1)
-    setIsLiked(!isLiked)
-  }
+    setLike(isLiked ? like - 1 : like + 1);
+    setIsLiked(!isLiked);
+  };
 
   const handleDelete = () => {
     Swal.fire({
@@ -87,7 +106,7 @@ const Post = ({ post }) => {
             <div className="postDate">{format(post.createdAt)}</div>
           </div>
           <div className="postTopRight" style={{position: "relative"}}>
-            {post.userId === currentUser._id && (
+            {Boolean(currentUser && post.userId === currentUser._id) && (
               <>
                 <MoreVert style={{cursor: "pointer"}} onClick={() => setMenuOpen(!menuOpen)} />
                 {menuOpen && (

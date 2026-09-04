@@ -5,8 +5,9 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { format } from "timeago.js";
+import { Link } from "react-router-dom";
 
-const Feed = ({username}) => {
+const Feed = ({ username }) => {
   const [posts, setPosts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { user } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const Feed = ({username}) => {
       postsWithMetadata.forEach(p => {
         const postTime = new Date(p.createdAt);
         // 5 minutes threshold to keep newly created posts at the top
-        if (p.userId === user?._id && (now - postTime) < 300000) {
+        if (user && p.userId === user?._id && (now - postTime) < 300000) {
            newLocalPosts.push(p);
         } else {
            otherPosts.push(p);
@@ -56,9 +57,7 @@ const Feed = ({username}) => {
   };
 
   useEffect(() => {
-    if (username || user?._id) {
-      fetchPosts();
-    }
+    fetchPosts();
   }, [username, user?._id]);
 
   useEffect(() => {
@@ -104,7 +103,60 @@ const Feed = ({username}) => {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        {(!username || username ===  user.username ) && <Share />}
+        {/* Guest user welcome banner */}
+        {!user && !username && (
+          <div style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "16px",
+            padding: "18px 22px",
+            marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "12px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.03)"
+          }}>
+            <div>
+              <h3 style={{ margin: "0 0 4px 0", color: "#111827", fontSize: "16px", fontWeight: "700" }}>
+                Welcome to ZakoraSocial! 👋
+              </h3>
+              <p style={{ margin: 0, color: "#6b7280", fontSize: "13.5px" }}>
+                You are browsing as a guest. Sign in to like posts, comment, and share your own stories.
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Link to="/login" style={{
+                background: "linear-gradient(135deg, #4f46e5, #6366f1)",
+                color: "#ffffff",
+                padding: "8px 18px",
+                borderRadius: "8px",
+                textDecoration: "none",
+                fontWeight: "600",
+                fontSize: "13px"
+              }}>
+                Log In
+              </Link>
+              <Link to="/register" style={{
+                backgroundColor: "#f8fafc",
+                border: "1px solid #c7d2fe",
+                color: "#4f46e5",
+                padding: "8px 18px",
+                borderRadius: "8px",
+                textDecoration: "none",
+                fontWeight: "600",
+                fontSize: "13px"
+              }}>
+                Sign Up
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Authenticated user Share post box */}
+        {Boolean(user && (!username || username === user.username)) && <Share />}
+
         {displayedPosts.length > 0 ? (
           displayedPosts.map((p) => (
             <Post key={p._id} post={p} />
@@ -116,7 +168,7 @@ const Feed = ({username}) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Feed;
